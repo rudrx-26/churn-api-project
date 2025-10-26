@@ -32,10 +32,11 @@ def predict():
         input_data.get('Geography_Germany', 0),
         input_data.get('Geography_Spain', 0)
     ]])
-    vals[:, :8] = scaler.transform(vals[:, :8])
+    vals[:, :6] = scaler.transform(vals[:, :6])
     prob = model.predict(vals)[0][0]
     pred = int(prob > 0.5)
     return jsonify({'churn': int(pred), 'probability': float(prob)})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+
