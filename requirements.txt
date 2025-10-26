@@ -1,6 +1,5 @@
 flask
-tensorflow
-numpy
-scikit-learn
 gunicorn
-
+scikit-learn==1.0.1
+tensorflow==2.11.0
+numpy==1.23.0
