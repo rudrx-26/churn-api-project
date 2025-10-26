@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify
 import pickle
 import numpy as np
 import tensorflow as tf
+from flask import Flask, request, jsonify
 
 # Load model and preprocessors
 model = tf.keras.models.load_model('churn_ann_model.h5')
@@ -12,10 +12,13 @@ with open('scaler.pkl', 'rb') as f:
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return "API is running!"
+
 @app.route('/predict', methods=['POST'])
 def predict():
     input_data = request.get_json()
-    # Example: input_data must have all 11 input fields and one-hot columns
     vals = np.array([[
         input_data['CreditScore'],
         le_gender.transform([input_data['Gender']])[0],
@@ -32,7 +35,7 @@ def predict():
     vals[:, :8] = scaler.transform(vals[:, :8])
     prob = model.predict(vals)[0][0]
     pred = int(prob > 0.5)
-    return jsonify({'churn_probability': float(prob), 'prediction': pred})
+    return jsonify({'churn': int(pred), 'probability': float(prob)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=10000)
