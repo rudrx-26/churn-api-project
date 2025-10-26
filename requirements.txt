@@ -1,3 +1,5 @@
+setuptools
+wheel
 flask
 gunicorn
 scikit-learn==1.0.2
