@@ -6,7 +6,7 @@ import pickle
 st.title("Customer Churn Prediction")
 
 # Load model and encoders/scaler (cache for performance)
-@st.experimental_singleton
+@st.cache_resource
 def load_artifacts():
     model = tf.keras.models.load_model("churn_ann_model.h5")
     le_gender = pickle.load(open("le_gender.pkl", "rb"))
@@ -38,3 +38,4 @@ if submitted:
     prob = float(model.predict(input_scaled)[0][0])
     pred = int(prob > 0.5)
     st.success(f"Churn prediction: **{'YES' if pred else 'NO'}** (Probability: {prob:.2f})")
+
