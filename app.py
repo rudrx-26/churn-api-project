@@ -1,7 +1,19 @@
 import streamlit as st
-import random
+import tensorflow as tf
+import numpy as np
+import pickle
 
-st.title("Customer Churn Prediction (Demo)")
+st.title("Customer Churn Prediction")
+
+# Load model and encoders/scaler (cache for performance)
+@st.experimental_singleton
+def load_artifacts():
+    model = tf.keras.models.load_model("churn_ann_model.h5")
+    le_gender = pickle.load(open("le_gender.pkl", "rb"))
+    scaler = pickle.load(open("scaler.pkl", "rb"))
+    return model, le_gender, scaler
+
+model, le_gender, scaler = load_artifacts()
 
 with st.form("user_input_form"):
     credit_score = st.number_input("Credit Score", value=650)
@@ -18,8 +30,11 @@ with st.form("user_input_form"):
     submitted = st.form_submit_button("Predict")
 
 if submitted:
-    prob = random.uniform(0, 1)
+    # Encode categorical variables (adjust according to your training!)
+    gender_encoded = le_gender.transform([gender])[0]
+    input_data = np.array([[credit_score, gender_encoded, age, tenure, balance,
+                            num_products, has_card, is_active, salary, geo_germany, geo_spain]], dtype=np.float32)
+    input_scaled = scaler.transform(input_data)
+    prob = float(model.predict(input_scaled)[0][0])
     pred = int(prob > 0.5)
-    st.success(f"Churn prediction: **{'YES' if pred else 'NO'}**  (Probability: {prob:.2f})")
-    st.caption("This is a demo prototype—when deployed on a bigger server, your saved ML model predicts here!")
-
+    st.success(f"Churn prediction: **{'YES' if pred else 'NO'}** (Probability: {prob:.2f})")
