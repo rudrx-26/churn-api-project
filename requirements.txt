@@ -1,6 +1,5 @@
-setuptools
-wheel
 streamlit
 scikit-learn
 tensorflow
 numpy
+pickle-mixin
