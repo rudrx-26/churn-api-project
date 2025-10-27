@@ -3,6 +3,7 @@ sentry_sdk.init(
     dsn="https://59779dcff8aafa598ede055ada86bcb1@o4510262460481536.ingest.us.sentry.io/4510262500589568",
     traces_sample_rate=1.0
 )
+1/0
 
 
 import streamlit as st
@@ -45,5 +46,6 @@ if submitted:
     prob = float(model.predict(input_scaled)[0][0])
     pred = int(prob > 0.5)
     st.success(f"Churn prediction: **{'YES' if pred else 'NO'}** (Probability: {prob:.2f})")
+
 
 
