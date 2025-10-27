@@ -1,7 +1,6 @@
 setuptools
 wheel
-flask
-gunicorn
+streamlit
 scikit-learn
 tensorflow
 numpy
